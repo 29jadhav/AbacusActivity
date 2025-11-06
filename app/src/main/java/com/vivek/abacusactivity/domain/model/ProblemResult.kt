@@ -1,4 +1,4 @@
-package com.vivek.abacusactivity.screens
+package com.vivek.abacusactivity.domain.model
 
 // Add these new data classes near your CalculationProblem data class
 data class ProblemResult(

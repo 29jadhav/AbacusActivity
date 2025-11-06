@@ -1,9 +1,10 @@
-package com.vivek.abacusactivity.screens
+package com.vivek.abacusactivity.screens.start
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,16 +28,20 @@ import androidx.compose.ui.unit.sp
 import com.vivek.abacusactivity.R
 
 @Composable
-fun StartScreen(onStart: (Int) -> Unit) {
+fun StartScreen(modifier: Modifier = Modifier, onStart: (Int) -> Unit) {
     var customTime by remember { mutableStateOf("") }
     val predefinedTimes = listOf(1, 5, 7, 10)
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxSize()
     ) {
-        Text(stringResource(R.string.timed_challenge), fontSize = 28.sp, fontWeight = FontWeight.Bold)
+        Text(
+            stringResource(R.string.timed_challenge),
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold
+        )
         Spacer(modifier = Modifier.height(24.dp))
         Text(stringResource(R.string.choose_duration_minutes), fontSize = 18.sp)
         Spacer(modifier = Modifier.height(16.dp))

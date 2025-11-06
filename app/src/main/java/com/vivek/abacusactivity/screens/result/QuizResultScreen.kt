@@ -1,4 +1,4 @@
-package com.vivek.abacusactivity.screens
+package com.vivek.abacusactivity.screens.result
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,12 +21,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vivek.abacusactivity.R
+import com.vivek.abacusactivity.domain.model.ProblemResult
 
 @Composable
-fun QuizResultScreen(score: Int, results: List<ProblemResult>, onRestart: () -> Unit) {
+fun QuizResultScreen(
+    modifier: Modifier,
+    score: Int,
+    results: List<ProblemResult>,
+    onRestart: () -> Unit
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize() // Use full size for scrolling
+        modifier = modifier.fillMaxSize() // Use full size for scrolling
     ) {
         Text(
             stringResource(R.string.times_up),
@@ -86,7 +92,9 @@ fun ResultRow(result: ProblemResult) {
 
         // Right side: The result icon (tick or cross)
         Text(
-            text = if (result.isCorrect) stringResource(R.string.correct_symbol) else stringResource(R.string.incorrect_symbol),
+            text = if (result.isCorrect) stringResource(R.string.correct_symbol) else stringResource(
+                R.string.incorrect_symbol
+            ),
             fontSize = 24.sp,
             color = resultColor,
             fontWeight = FontWeight.Bold

@@ -1,5 +1,9 @@
-package com.vivek.abacusactivity.screens
+package com.vivek.abacusactivity.screens.game
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +18,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,23 +31,19 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vivek.abacusactivity.R
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.animation.togetherWith
+import com.vivek.abacusactivity.screens.game.GameEvent
 
 @Composable
 fun GameActiveScreen(
-    problem: CalculationProblem,
-    score: Int,
-    timeRemaining: Int,
-    userAnswer: String,
-    onAnswerChange: (String) -> Unit,
-    onSubmit: () -> Unit
+    modifier: Modifier,
+    uiState: GameUiState,
+    onEvent: (GameEvent) -> Unit
 ) {
-    // This Column will wrap the entire screen content for proper alignment and spacing
+    var userAnswer by remember { mutableStateOf("") }
+    val problem = uiState.problem
+
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -49,15 +53,15 @@ fun GameActiveScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
-                text = stringResource(R.string.score_label, score),
+                text = stringResource(R.string.score_label, uiState.score),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = stringResource(R.string.time_label, timeRemaining / 60, timeRemaining % 60),
+                text = stringResource(R.string.time_label, uiState.timeRemaining / 60, uiState.timeRemaining % 60),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = if (timeRemaining <= 10) Color.Red else Color.Black
+                color = if (uiState.isTimeWarning) Color.Red else Color.Black
             )
         }
 
@@ -65,17 +69,12 @@ fun GameActiveScreen(
         Text(text = stringResource(R.string.calculate_the_sum), fontSize = 20.sp)
         Spacer(modifier = Modifier.height(32.dp))
 
-        // AnimatedContent will animate its children when the 'problem' state changes.
         AnimatedContent(
             targetState = problem,
             label = stringResource(R.string.problem_number_animation),
             transitionSpec = {
-                // Animation for new numbers entering the screen
                 val slideIn = slideInVertically { fullHeight -> -fullHeight }
-                // Animation for old numbers leaving the screen
                 val slideOut = slideOutVertically { fullHeight -> fullHeight }
-
-                // Combine the enter and exit animations
                 slideIn togetherWith slideOut
             }
         ) { currentProblem ->
@@ -91,15 +90,24 @@ fun GameActiveScreen(
         Spacer(modifier = Modifier.height(48.dp))
         OutlinedTextField(
             value = userAnswer,
-            onValueChange = onAnswerChange,
+            onValueChange = { userAnswer = it },
             label = { Text(stringResource(R.string.your_answer_label)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
-            keyboardActions = KeyboardActions(onDone = { onSubmit() }),
+            keyboardActions = KeyboardActions(onDone = {
+                onEvent(GameEvent.SubmitAnswer(userAnswer))
+                userAnswer = "" // Clear field after submitting
+            }),
             singleLine = true,
             modifier = Modifier.width(200.dp)
         )
         Spacer(modifier = Modifier.height(32.dp))
-        Button(onClick = onSubmit, enabled = userAnswer.isNotBlank()) {
+        Button(
+            onClick = {
+                onEvent(GameEvent.SubmitAnswer(userAnswer))
+                userAnswer = "" // Clear field after submitting
+            },
+            enabled = userAnswer.isNotBlank()
+        ) {
             Text(stringResource(R.string.submit_answer_button))
         }
     }
