@@ -18,13 +18,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vivek.abacusactivity.R
+import com.vivek.abacusactivity.ui.theme.Dimens
 
 @Composable
-fun PausedScreen(onResume: () -> Unit) {
+fun PausedScreen(modifier: Modifier, onResume: () -> Unit) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.6f)), // Semi-transparent overlay
+            .background(Color.Black.copy(alpha = Dimens.ALPHA_LOW)), // Semi-transparent overlay
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -33,11 +34,11 @@ fun PausedScreen(onResume: () -> Unit) {
         ) {
             Text(
                 text = stringResource(R.string.game_paused),
-                fontSize = 32.sp,
+                fontSize = Dimens.FontSizeTitle,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
             )
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(Dimens.SpacingLarge))
             Button(onClick = onResume) {
                 Text(stringResource(R.string.resume_button))
             }

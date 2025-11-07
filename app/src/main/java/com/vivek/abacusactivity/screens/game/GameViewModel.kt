@@ -22,7 +22,6 @@ class GameViewModel(
 
     private val _uiState = MutableStateFlow(GameUiState())
     val uiState = _uiState.asStateFlow()
-
     private var timerJob: Job? = null
 
     init {
@@ -34,7 +33,6 @@ class GameViewModel(
             onEvent(GameEvent.PauseGame)
         }
     }
-
 
     /**
      * The single entry point for all UI events.

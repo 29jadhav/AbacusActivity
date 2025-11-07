@@ -12,14 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.error
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.vivek.abacusactivity.R
 import com.vivek.abacusactivity.domain.model.ProblemResult
 import com.vivek.abacusactivity.ui.theme.AppTheme
-
+import com.vivek.abacusactivity.ui.theme.Dimens
+import com.vivek.abacusactivity.utils.Constants
 
 @Composable
 
@@ -35,11 +33,11 @@ fun ResultRow(result: ProblemResult) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .padding(horizontal = Dimens.SpacingMedium, vertical = Dimens.SpacingSmall),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Column(modifier = Modifier.weight(1f)) {
+        Column(modifier = Modifier.weight(Constants.FULL_LAYOUT_WEIGHT)) {
             Text(
                 text = stringResource(R.string.question_details, numbersString, result.problem.sum),
                 fontWeight = FontWeight.Bold,
@@ -55,7 +53,7 @@ fun ResultRow(result: ProblemResult) {
             text = if (result.isCorrect) stringResource(R.string.correct_symbol) else stringResource(
                 R.string.incorrect_symbol
             ),
-            fontSize = 24.sp,
+            fontSize = Dimens.FontSizeLarge,
             color = resultColor,
             fontWeight = FontWeight.Bold
         )

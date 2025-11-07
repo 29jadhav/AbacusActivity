@@ -5,12 +5,13 @@ package com.vivek.abacusactivity.screens.start
  * This sealed interface is used to ensure type safety and restrict the kinds of
  * events that can be sent to the ViewModel.
  */
-sealed interface StartScreenEvent {
-    /**
-     * This event is triggered whenever the user types into the custom time
-     * input field.
-     *
-     * @param time The new text content of the input field.
-     */
-    data class OnCustomTimeChange(val time: String) : StartScreenEvent
+sealed class StartScreenEvent {
+    // Event for when the user types in the custom time field
+    data class OnCustomTimeChange(val time: String) : StartScreenEvent()
+
+    // Event for when the user clicks a predefined time button (e.g., "1 Min")
+    data class StartPredefinedTimeGame(val timeInMinutes: Int) : StartScreenEvent()
+
+    // Event for when the user clicks the "Start" button for a custom time
+    object StartCustomTimeGame : StartScreenEvent()
 }
