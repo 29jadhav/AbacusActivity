@@ -15,8 +15,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,12 +28,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.error
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vivek.abacusactivity.R
 import com.vivek.abacusactivity.screens.game.GameEvent
+import com.vivek.abacusactivity.ui.theme.AppTheme
 
 @Composable
 fun GameActiveScreen(
@@ -41,6 +45,10 @@ fun GameActiveScreen(
 ) {
     var userAnswer by remember { mutableStateOf("") }
     val problem = uiState.problem
+
+    val defaultTextColor = MaterialTheme.colorScheme.onSurface
+    val warningColor = AppTheme.customColors.error // Use the theme-aware error color
+
 
     Column(
         modifier = modifier
@@ -55,18 +63,27 @@ fun GameActiveScreen(
             Text(
                 text = stringResource(R.string.score_label, uiState.score),
                 fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = defaultTextColor
             )
             Text(
-                text = stringResource(R.string.time_label, uiState.timeRemaining / 60, uiState.timeRemaining % 60),
+                text = stringResource(
+                    R.string.time_label,
+                    uiState.timeRemaining / 60,
+                    uiState.timeRemaining % 60
+                ),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = if (uiState.isTimeWarning) Color.Red else Color.Black
+                color = if (uiState.isTimeWarning) warningColor else defaultTextColor
             )
         }
 
         Spacer(modifier = Modifier.height(48.dp))
-        Text(text = stringResource(R.string.calculate_the_sum), fontSize = 20.sp)
+        Text(
+            text = stringResource(R.string.calculate_the_sum),
+            fontSize = 20.sp,
+            color = defaultTextColor.copy(alpha = 0.8f)
+        )
         Spacer(modifier = Modifier.height(32.dp))
 
         AnimatedContent(
@@ -83,7 +100,12 @@ fun GameActiveScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 currentProblem.numbers.forEach { number ->
-                    Text(text = number.toString(), fontSize = 36.sp, fontWeight = FontWeight.Bold)
+                    Text(
+                        text = number.toString(),
+                        fontSize = 36.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = defaultTextColor
+                    )
                 }
             }
         }
@@ -98,7 +120,14 @@ fun GameActiveScreen(
                 userAnswer = "" // Clear field after submitting
             }),
             singleLine = true,
-            modifier = Modifier.width(200.dp)
+            modifier = Modifier.width(200.dp),
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                cursorColor = MaterialTheme.colorScheme.primary
+            )
         )
         Spacer(modifier = Modifier.height(32.dp))
         Button(
