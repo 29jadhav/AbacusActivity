@@ -20,6 +20,7 @@ object Dimens {
     // === Component Sizes ===
     val InputFieldSmall = 120.dp
     val InputFieldMedium = 200.dp
+    val IconSizeMedium = 24.dp
 
     // === Font Sizes ===
     val FontSizeSmall = 18.sp

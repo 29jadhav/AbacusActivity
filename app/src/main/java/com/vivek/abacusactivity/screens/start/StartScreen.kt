@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -33,7 +34,8 @@ import kotlinx.coroutines.flow.collectLatest
 fun StartScreen(
     modifier: Modifier = Modifier,
     startViewModel: StartViewModel = viewModel(),
-    onStart: (Int) -> Unit
+    onStart: (Int) -> Unit,
+    onNavigateToHistory: () -> Unit
 ) {
     val uiState by startViewModel.uiState.collectAsState()
     LaunchedEffect(Unit) {
@@ -107,6 +109,11 @@ fun StartScreen(
             ) {
                 Text(stringResource(R.string.start_button))
             }
+        }
+        Spacer(modifier = Modifier.height(Dimens.SpacingDoubleExtraLarge))
+
+        OutlinedButton(onClick = onNavigateToHistory) {
+            Text(stringResource(R.string.view_history))
         }
     }
 }

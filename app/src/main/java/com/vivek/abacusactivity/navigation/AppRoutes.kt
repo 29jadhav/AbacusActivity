@@ -22,14 +22,12 @@ sealed class AppRoutes(
     // Route for Start Screen (no arguments)
     data object Start : AppRoutes("start")
 
-    data class Result(val score: Int = 0) : AppRoutes(
+    data class Result(val gameId: Long = -1) : AppRoutes(
         baseRoute = "result",
-        navArguments = listOf(navArgument("score") { type = NavType.IntType })
+        navArguments = listOf(
+            navArgument("gameId") { type = NavType.LongType })
     ) {
-        // Function to build the destination path with the actual score
-        fun buildRoute(): String {
-            return "$baseRoute/$score"
-        }
+        fun buildRoute() = "$baseRoute/$gameId"
     }
 
     // Route for Game Screen (with a duration argument)
@@ -37,9 +35,9 @@ sealed class AppRoutes(
         baseRoute = "game",
         navArguments = listOf(navArgument("duration") { type = NavType.IntType })
     ) {
-        // Function to build the destination path with the actual argument value
-        fun buildRoute(): String {
-            return "$baseRoute/$duration"
-        }
+        fun buildRoute() = "$baseRoute/$duration"
+
     }
+
+    object History : AppRoutes("history")
 }

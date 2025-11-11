@@ -22,10 +22,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.vivek.abacusactivity" />
+                  <option name="mobileSdkAppId" value="1:1678613550:android:f1ba2b94c14bbb107cd3bf" />
+                  <option name="projectId" value="abacusactivity" />
+                  <option name="projectNumber" value="1678613550" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

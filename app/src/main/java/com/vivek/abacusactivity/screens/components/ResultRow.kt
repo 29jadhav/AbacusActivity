@@ -6,6 +6,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +27,15 @@ import com.vivek.abacusactivity.utils.Constants
 @Composable
 
 fun ResultRow(result: ProblemResult) {
+    val rowColor =
+        if (result.isCorrect) AppTheme.customColors.success.copy(alpha = 0.1f)
+        else AppTheme.customColors.error.copy(alpha = 0.1f)
+    val icon =
+        if (result.isCorrect) Icons.Default.Check
+        else Icons.Default.Close
+    val iconColor =
+        if (result.isCorrect) AppTheme.customColors.success else AppTheme.customColors.error
+
     val resultColor = if (result.isCorrect) {
         AppTheme.customColors.success
     } else {
@@ -49,13 +63,11 @@ fun ResultRow(result: ProblemResult) {
             )
         }
 
-        Text(
-            text = if (result.isCorrect) stringResource(R.string.correct_symbol) else stringResource(
-                R.string.incorrect_symbol
-            ),
-            fontSize = Dimens.FontSizeLarge,
-            color = resultColor,
-            fontWeight = FontWeight.Bold
+        Icon(
+            imageVector = icon,
+            contentDescription = if (result.isCorrect) "Correct" else "Incorrect",
+            tint = iconColor,
+            modifier = Modifier.size(Dimens.IconSizeMedium)
         )
     }
 }

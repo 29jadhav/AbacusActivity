@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.vivek.abacusactivity.R
 import com.vivek.abacusactivity.ui.theme.AppTheme
@@ -140,11 +141,16 @@ fun ActiveGameContent(
             value = userAnswer,
             onValueChange = { userAnswer = it },
             label = { Text(stringResource(R.string.your_answer_label)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
-            keyboardActions = KeyboardActions(onDone = {
-                onEvent(GameEvent.SubmitAnswer(userAnswer))
-                userAnswer = "" // Clear field after submitting
-            }),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.NumberPassword,
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    onEvent(GameEvent.SubmitAnswer(userAnswer))
+                    userAnswer = "" // Clear field after submitting
+                },
+            ),
             singleLine = true,
             modifier = Modifier.width(Dimens.InputFieldMedium),
             colors = TextFieldDefaults.colors(

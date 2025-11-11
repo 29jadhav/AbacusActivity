@@ -4,6 +4,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.vivek.abacusactivity.domain.usecase.SaveGameAndResultsUseCase
 import com.vivek.abacusactivity.domain.model.ProblemResult
 import com.vivek.abacusactivity.domain.repository.ProblemRepository
 import com.vivek.abacusactivity.screens.game.GameEvent
@@ -16,8 +17,9 @@ import kotlinx.coroutines.launch
 import kotlin.collections.plus
 
 class GameViewModel(
-    private val problemRepository: ProblemRepository = ProblemRepository(),
-    private val durationInSeconds: Int
+    private val problemRepository: ProblemRepository,
+    private val durationInSeconds: Int,
+    private val saveGameAndResults: SaveGameAndResultsUseCase
 ) : ViewModel(), DefaultLifecycleObserver {
 
     private val _uiState = MutableStateFlow(GameUiState())
@@ -47,6 +49,18 @@ class GameViewModel(
         }
     }
 
+    private fun saveGameResult(): Job {
+        return viewModelScope.launch {
+            val finalState = _uiState.value
+            // Call the Use Case with the required data
+            val newGameId = saveGameAndResults(
+                finalScore = finalState.score,
+                initialDuration = durationInSeconds,
+                results = finalState.results
+            )
+            _uiState.update { it.copy(lastSavedGameId = newGameId) }
+        }
+    }
 
     private fun pauseGame() {
         // Cancel the timer job, but keep the current state
@@ -115,6 +129,7 @@ class GameViewModel(
                     )
                 }
             }
+            saveGameResult().join()
             _uiState.update { it.copy(gameState = GameState.FINISHED) }
         }
     }

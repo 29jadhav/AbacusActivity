@@ -9,5 +9,6 @@ data class GameUiState(
     val timeRemaining: Int = 0,
     val isTimeWarning: Boolean = false,
     val gameState: GameState = GameState.SETUP,
-    val results: List<ProblemResult> = emptyList()
+    val results: List<ProblemResult> = emptyList(),
+    val lastSavedGameId: Long = -1
 )
