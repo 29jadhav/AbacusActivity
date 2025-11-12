@@ -1,29 +1,37 @@
 package com.vivek.abacusactivity.screens.game
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vivek.abacusactivity.domain.usecase.SaveGameAndResultsUseCase
 import com.vivek.abacusactivity.domain.model.ProblemResult
 import com.vivek.abacusactivity.domain.repository.ProblemRepository
 import com.vivek.abacusactivity.screens.game.GameEvent
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.collections.plus
 
-class GameViewModel(
+@HiltViewModel
+class GameViewModel @Inject constructor(
     private val problemRepository: ProblemRepository,
-    private val durationInSeconds: Int,
-    private val saveGameAndResults: SaveGameAndResultsUseCase
+    private val saveGameAndResults: SaveGameAndResultsUseCase,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel(), DefaultLifecycleObserver {
 
     private val _uiState = MutableStateFlow(GameUiState())
     val uiState = _uiState.asStateFlow()
+    private val durationInSeconds: Int = savedStateHandle.get<Int>("durationInSeconds") ?: 60
+
     private var timerJob: Job? = null
 
     init {

@@ -3,11 +3,12 @@ package com.vivek.abacusactivity.domain.usecase
 import com.vivek.abacusactivity.data.dao.GameDao
 import com.vivek.abacusactivity.data.entity.GameWithProblems
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
 /**
  * A use case to retrieve a single game session and all its associated problems.
  */
-class GetGameWithProblemsUseCase(
+class GetGameWithProblemsUseCase @Inject constructor(
     private val gameDao: GameDao
 ) {
     operator fun invoke(gameId: Long): Flow<GameWithProblems?> {

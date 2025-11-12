@@ -8,20 +8,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.vivek.abacusactivity.data.database.AbacusDatabase
 import com.vivek.abacusactivity.screens.game.GameActiveScreen
 import com.vivek.abacusactivity.screens.game.GameState
 import com.vivek.abacusactivity.screens.game.GameViewModel
-import com.vivek.abacusactivity.screens.game.GameViewModelFactory
 import com.vivek.abacusactivity.screens.history.HistoryScreen
 import com.vivek.abacusactivity.screens.result.QuizResultScreen
 import com.vivek.abacusactivity.screens.result.ResultViewModel
-import com.vivek.abacusactivity.screens.result.ResultViewModelFactory
 import com.vivek.abacusactivity.screens.start.StartScreen
 
 @Composable
@@ -42,16 +43,16 @@ fun AppNavigation(modifier: Modifier) {
             )
         }
 
-        composable(route = AppRoutes.Game().route, arguments = AppRoutes.Game().navArguments) {
-            val duration = it.arguments?.getInt("duration") ?: 60
-
+        composable(
+            route = AppRoutes.Game().route,
+            arguments = listOf(navArgument("durationInSeconds") { type = NavType.IntType })
+        ) {
             // 1. Get the application context to create the database.
             val context = LocalContext.current
             // 2. Get the DAO. Wrap in remember to avoid recreating it on every recomposition.
             val gameDao = remember { AbacusDatabase.getDatabase(context).gameDao() }
             // 3. Now, provide the dao to the factory. This fixes the error.
-            val gameViewModel: GameViewModel =
-                viewModel(factory = GameViewModelFactory(duration, gameDao))
+            val gameViewModel: GameViewModel = hiltViewModel()
             val uiState by gameViewModel.uiState.collectAsState()
 
             DisposableEffect(lifecycleOwner, gameViewModel) {
@@ -86,20 +87,16 @@ fun AppNavigation(modifier: Modifier) {
         }
 
         composable(
-            AppRoutes.Result().route,
-            arguments = AppRoutes.Result().navArguments
-        ) { backStackEntry ->
-            val gameId = backStackEntry.arguments?.getLong("gameId") ?: -1
-            val cameFromHistory = navController.previousBackStackEntry?.destination?.route == AppRoutes.History.route
-            val context = LocalContext.current
-            val dao = remember { AbacusDatabase.getDatabase(context).gameDao() }
-            val resultViewModel: ResultViewModel = viewModel(
-                factory = ResultViewModelFactory(
-                    gameId,
-                    dao
-                )
+            route = AppRoutes.Result().route,
+            arguments = listOf(
+                navArgument("gameId") { type = NavType.LongType },
+                navArgument("isFromHistory") { type = NavType.BoolType }
             )
-
+        ) { backStackEntry ->
+            val cameFromHistory =
+                navController.previousBackStackEntry?.destination?.route == AppRoutes.History.route
+            val context = LocalContext.current
+            val resultViewModel: ResultViewModel = hiltViewModel()
             // Result screen shows final score
             QuizResultScreen(
                 modifier = modifier,

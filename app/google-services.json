@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1678613550",
+    "project_id": "abacusactivity",
+    "storage_bucket": "abacusactivity.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1678613550:android:f1ba2b94c14bbb107cd3bf",
+        "android_client_info": {
+          "package_name": "com.vivek.abacusactivity"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBi0skwT15upciJidDnaH_JxE8R8nALjXg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
