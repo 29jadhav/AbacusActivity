@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1678613550",
+    "project_id": "abacusactivity",
+    "storage_bucket": "abacusactivity.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1678613550:android:f1ba2b94c14bbb107cd3bf",
+        "android_client_info": {
+          "package_name": "com.vivek.abacusactivity"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1678613550-eseiqpkdt7pq0m15tlnvj6jgoe9hfauc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vivek.abacusactivity",
+            "certificate_hash": "8d342a263ba32954a02bc826ab5898cab1e7267f"
+          }
+        },
+        {
+          "client_id": "1678613550-h4ar54f623ur777sv19ktcbhhlmac2t0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vivek.abacusactivity",
+            "certificate_hash": "51b062a37c1fa03247b455f22735d7a9c3533ea2"
+          }
+        },
+        {
+          "client_id": "1678613550-e7mcka9c802lmpp6uu8gu2k5545dl0lk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBi0skwT15upciJidDnaH_JxE8R8nALjXg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1678613550-e7mcka9c802lmpp6uu8gu2k5545dl0lk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

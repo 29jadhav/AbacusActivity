@@ -16,7 +16,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -62,6 +64,28 @@ fun GameActiveScreen(
                 onResume = { onEvent(GameEvent.ResumeGame) }
             )
         }
+        if (uiState.showTerminateConfirmDialog) {
+            AlertDialog(
+                onDismissRequest = { onEvent(GameEvent.DismissTerminateDialog) },
+                title = { Text(text = stringResource(R.string.terminate_dialog_title)) },
+                text = { Text(text = stringResource(R.string.terminate_dialog_message)) },
+                confirmButton = {
+                    Button(
+                        onClick = { onEvent(GameEvent.TerminateGame) },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.error
+                        )
+                    ) {
+                        Text(stringResource(R.string.terminate_dialog_confirm_button))
+                    }
+                },
+                dismissButton = {
+                    Button(onClick = { onEvent(GameEvent.DismissTerminateDialog) }) {
+                        Text(stringResource(R.string.cancel_button))
+                    }
+                }
+            )
+        }
     }
 }
 
@@ -72,7 +96,7 @@ fun ActiveGameContent(
     onEvent: (GameEvent) -> Unit
 ) {
     var userAnswer by remember { mutableStateOf("") }
-    val problem = uiState.problem
+    val problem = uiState.currentProblem
 
     val defaultTextColor = MaterialTheme.colorScheme.onSurface
     val warningColor = AppTheme.customColors.error // Use the theme-aware error color
@@ -126,13 +150,15 @@ fun ActiveGameContent(
                 verticalArrangement = Arrangement.spacedBy(Dimens.SpacingMedium),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                currentProblem.numbers.forEach { number ->
-                    Text(
-                        text = number.toString(),
-                        fontSize = Dimens.FontSizeTitle,
-                        fontWeight = FontWeight.Bold,
-                        color = defaultTextColor
-                    )
+                currentProblem?.let { problem ->
+                    problem.numbers.forEach { number ->
+                        Text(
+                            text = number.toString(),
+                            fontSize = Dimens.FontSizeTitle,
+                            fontWeight = FontWeight.Bold,
+                            color = defaultTextColor
+                        )
+                    }
                 }
             }
         }
@@ -170,6 +196,21 @@ fun ActiveGameContent(
             enabled = userAnswer.isNotBlank()
         ) {
             Text(stringResource(R.string.submit_answer_button))
+        }
+        // Spacer pushes the Terminate button to the bottom
+        Spacer(Modifier.weight(1f))
+
+        // This is the new Terminate Game button
+        Button(
+            onClick = { onEvent(GameEvent.RequestTerminateGame) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = Dimens.SpacingLarge),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.error
+            )
+        ) {
+            Text(stringResource(R.string.terminate_game_button))
         }
     }
 }

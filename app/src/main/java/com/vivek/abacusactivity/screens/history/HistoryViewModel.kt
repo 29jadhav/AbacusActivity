@@ -2,12 +2,16 @@ package com.vivek.abacusactivity.screens.history
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.room.Insert
 import com.vivek.abacusactivity.domain.usecase.GetAllGamesUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
-class HistoryViewModel(
-    getAllGamesUseCase: GetAllGamesUseCase
+@HiltViewModel
+class HistoryViewModel @Inject constructor(
+    private val getAllGamesUseCase: GetAllGamesUseCase
 ) : ViewModel() {
 
     // Fetch the games and expose them as a StateFlow.

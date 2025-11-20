@@ -21,3 +21,6 @@ val ErrorRedLight = Color(0xFFB00020) // A standard Material dark red
 
 // 4. DEFINE a lighter red for dark theme
 val ErrorRedDark = Color(0xFFCF6679) // A standard Material dark theme error color
+
+val TerminatedOrangeLight = Color(0xFFC65A0D) // A deep, readable orange for light theme
+val TerminatedOrangeDark = Color(0xFFE88A4D)

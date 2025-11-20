@@ -17,7 +17,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -26,7 +25,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -38,11 +36,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.vivek.abacusactivity.R
-import com.vivek.abacusactivity.domain.model.CalculationProblem
+import com.vivek.abacusactivity.domain.model.Problem
 import com.vivek.abacusactivity.domain.model.ProblemResult
 import com.vivek.abacusactivity.screens.components.AnimatedCounter
 import com.vivek.abacusactivity.screens.components.ResultRow
-import com.vivek.abacusactivity.screens.components.ScreenTitle
 import com.vivek.abacusactivity.ui.theme.AppTheme
 import com.vivek.abacusactivity.ui.theme.Dimens
 import com.vivek.abacusactivity.utils.Constants
@@ -86,13 +83,16 @@ fun QuizResultScreen(
             return@Scaffold
         }
 
-        val score = gameDetails?.game?.finalScore ?: 0
+        val score = gameDetails?.game?.correctAnswers ?: 0
         val results = gameDetails?.problems ?: emptyList()
         val totalQuestions = results.size
         val correctAnswers = results.count { it.isCorrect }
         val incorrectAnswers = totalQuestions - correctAnswers
         val accuracy =
             if (totalQuestions > 0) (correctAnswers.toFloat() / totalQuestions * 100).roundToInt() else 0
+        val time = gameDetails?.game?.totalDurationInSeconds?.let {
+            "${it / 60}min"
+        }
 
 
         val scoreColor = if (score > results.size / Constants.MAJORITY_SCORE_DIVISOR) {
@@ -102,14 +102,10 @@ fun QuizResultScreen(
         }
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = modifier
+            modifier = Modifier
+                .padding(paddingValues)
                 .fillMaxSize()
         ) {
-            Spacer(modifier = Modifier.height(Dimens.SpacingMedium))
-            Text(
-                stringResource(R.string.results_summary_title),
-                style = MaterialTheme.typography.titleLarge
-            )
             Spacer(modifier = Modifier.height(Dimens.SpacingMedium))
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -148,8 +144,22 @@ fun QuizResultScreen(
                             "$incorrectAnswers",
                             AppTheme.customColors.error
                         )
-                        SummaryStat(stringResource(R.string.accuracy), "$accuracy%")
+
                     }
+                    Spacer(modifier = Modifier.height(Dimens.SpacingSmall)) // Gap between rows
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceAround
+                    ) {
+                        SummaryStat(stringResource(R.string.accuracy), "$accuracy%")
+
+                        // --- ADDED TIME HERE ---
+                        SummaryStat(
+                            stringResource(R.string.time_played), // "Time"
+                            time ?: "" // "60s" or "3m 0s"
+                        )
+                    }
+
                 }
             }
 
@@ -163,18 +173,21 @@ fun QuizResultScreen(
                     // MODIFICATION: Map from ProblemEntity to ProblemResult before passing to the UI component.
                     // We use remember to avoid recalculating this on every recomposition.
                     val result = remember(entity) {
-                        val optionNumbers =
-                            entity.numbers.split(",").mapNotNull { it.toIntOrNull() }
+                        val optionNumbers = entity.numbers
+                            .removeSurrounding("[", "]")
+                            .split(",")
+                            .mapNotNull { it.trim().toIntOrNull() }
                         ProblemResult(
-                            problem = CalculationProblem(
+                            problem = Problem(
                                 // Convert the comma-separated string from the DB back into a list of integers
                                 numbers = optionNumbers,
-                                sum = optionNumbers.sum()
+                                correctAnswer = optionNumbers.sum()
                             ),
                             userAnswer = entity.userAnswer,
                             isCorrect = entity.isCorrect
                         )
                     }
+                    println("result: $result")
                     ResultRow(result)
                 }
             }

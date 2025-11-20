@@ -19,21 +19,24 @@ sealed class AppRoutes(
             builder.toString()
         }
 
+    data object Login : AppRoutes("login_screen")
     // Route for Start Screen (no arguments)
-    data object Start : AppRoutes("start")
+    data object Home : AppRoutes("start")
 
-    data class Result(val gameId: Long = -1) : AppRoutes(
+    data class Result(val gameId: Long = -1, val isFromHistory: Boolean = false) : AppRoutes(
         baseRoute = "result",
         navArguments = listOf(
-            navArgument("gameId") { type = NavType.LongType })
+            navArgument("gameId") { type = NavType.LongType },
+            navArgument("isFromHistory") { type = NavType.BoolType }
+        )
     ) {
-        fun buildRoute() = "$baseRoute/$gameId"
+        fun buildRoute() = "$baseRoute/$gameId/$isFromHistory"
     }
 
     // Route for Game Screen (with a duration argument)
     data class Game(val duration: Int = 0) : AppRoutes(
         baseRoute = "game",
-        navArguments = listOf(navArgument("duration") { type = NavType.IntType })
+        navArguments = listOf(navArgument("durationInSeconds") { type = NavType.IntType })
     ) {
         fun buildRoute() = "$baseRoute/$duration"
 
