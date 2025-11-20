@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import com.vivek.abacusactivity.data.entity.GameEntity
 import com.vivek.abacusactivity.data.entity.GameWithProblems
 import com.vivek.abacusactivity.data.entity.ProblemEntity
@@ -30,5 +31,12 @@ interface GameDao {
     @Query("SELECT * FROM games WHERE gameId = :gameId")
     fun getGameWithProblems(gameId: Long): Flow<GameWithProblems?>
 
+    @Update
+    suspend fun updateGame(game: GameEntity)
 
+    @Query("SELECT * FROM games WHERE isSynced = 0 AND status IN ('COMPLETED', 'TERMINATED')")
+    suspend fun getUnsyncedGames(): List<GameEntity>
+
+    @Query("UPDATE games SET isSynced = :isSynced WHERE gameId = :gameId")
+    suspend fun updateSyncStatus(gameId: Long, isSynced: Boolean)
 }

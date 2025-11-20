@@ -2,6 +2,7 @@ package com.vivek.abacusactivity.data.entity
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
@@ -13,7 +14,8 @@ import androidx.room.PrimaryKey
             childColumns = ["gameOwnerId"],
             onDelete = ForeignKey.CASCADE // If a game is deleted, delete its problems
         )
-    ]
+    ],
+    indices = [Index(value = ["gameOwnerId"])]
 )
 data class ProblemEntity(
     @PrimaryKey(autoGenerate = true)

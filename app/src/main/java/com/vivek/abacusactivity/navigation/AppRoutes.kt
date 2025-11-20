@@ -19,8 +19,9 @@ sealed class AppRoutes(
             builder.toString()
         }
 
+    data object Login : AppRoutes("login_screen")
     // Route for Start Screen (no arguments)
-    data object Start : AppRoutes("start")
+    data object Home : AppRoutes("start")
 
     data class Result(val gameId: Long = -1, val isFromHistory: Boolean = false) : AppRoutes(
         baseRoute = "result",

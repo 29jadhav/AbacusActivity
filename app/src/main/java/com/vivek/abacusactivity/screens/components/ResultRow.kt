@@ -53,7 +53,7 @@ fun ResultRow(result: ProblemResult) {
     ) {
         Column(modifier = Modifier.weight(Constants.FULL_LAYOUT_WEIGHT)) {
             Text(
-                text = stringResource(R.string.question_details, numbersString, result.problem.sum),
+                text = stringResource(R.string.question_details, numbersString, result.problem.correctAnswer),
                 fontWeight = FontWeight.Bold,
                 color = defaultTextColor
             )

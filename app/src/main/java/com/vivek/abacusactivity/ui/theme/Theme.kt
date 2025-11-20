@@ -12,21 +12,24 @@ import androidx.compose.ui.graphics.Color
 // 1. DEFINE the structure for your custom colors
 data class CustomColors(
     val success: Color,
-    val error: Color
+    val error: Color,
+    val terminatedGame: Color
 )
 
 // 2. CREATE CompositionLocals for light and dark themes
 private val LocalLightColors = staticCompositionLocalOf {
     CustomColors(
         success = SuccessGreenLight,
-        error = ErrorRedLight
+        error = ErrorRedLight,
+        terminatedGame = TerminatedOrangeLight
     )
 }
 
 private val LocalDarkColors = staticCompositionLocalOf {
     CustomColors(
         success = SuccessGreenDark,
-        error = ErrorRedDark
+        error = ErrorRedDark,
+        terminatedGame = TerminatedOrangeDark
     )
 }
 

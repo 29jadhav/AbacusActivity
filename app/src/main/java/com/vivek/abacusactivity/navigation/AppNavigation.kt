@@ -1,38 +1,50 @@
 package com.vivek.abacusactivity.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.vivek.abacusactivity.data.database.AbacusDatabase
 import com.vivek.abacusactivity.screens.game.GameActiveScreen
 import com.vivek.abacusactivity.screens.game.GameState
 import com.vivek.abacusactivity.screens.game.GameViewModel
 import com.vivek.abacusactivity.screens.history.HistoryScreen
+import com.vivek.abacusactivity.screens.login.LoginScreen
 import com.vivek.abacusactivity.screens.result.QuizResultScreen
 import com.vivek.abacusactivity.screens.result.ResultViewModel
 import com.vivek.abacusactivity.screens.start.StartScreen
 
 @Composable
-fun AppNavigation(modifier: Modifier) {
+fun AppNavigation(modifier: Modifier, isUserLoggedIn: Boolean) {
     val navController = rememberNavController()
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    NavHost(navController = navController, startDestination = AppRoutes.Start.route) {
+    val startDestination = if (isUserLoggedIn) AppRoutes.Home.route else AppRoutes.Login.route
 
-        composable(AppRoutes.Start.route) {
+    NavHost(navController = navController, startDestination = startDestination) {
+
+        composable(AppRoutes.Login.route) {
+            LoginScreen(
+                onSignInSuccess = {
+                    // On success, navigate to home and clear the entire back stack
+                    // ensuring the user can't go back to the login screen.
+                    navController.navigate(AppRoutes.Home.route) {
+                        popUpTo(AppRoutes.Login.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+        composable(AppRoutes.Home.route) {
             // Just call the main screen, which manages its own state via the ViewModel
             StartScreen(
                 modifier = modifier,
@@ -47,11 +59,6 @@ fun AppNavigation(modifier: Modifier) {
             route = AppRoutes.Game().route,
             arguments = listOf(navArgument("durationInSeconds") { type = NavType.IntType })
         ) {
-            // 1. Get the application context to create the database.
-            val context = LocalContext.current
-            // 2. Get the DAO. Wrap in remember to avoid recreating it on every recomposition.
-            val gameDao = remember { AbacusDatabase.getDatabase(context).gameDao() }
-            // 3. Now, provide the dao to the factory. This fixes the error.
             val gameViewModel: GameViewModel = hiltViewModel()
             val uiState by gameViewModel.uiState.collectAsState()
 
@@ -69,12 +76,16 @@ fun AppNavigation(modifier: Modifier) {
 
             LaunchedEffect(uiState.gameState) {
                 if (uiState.gameState == GameState.FINISHED) {
-                    // Navigate to results and pass the final score as an argument
-                    navController.navigate(
-                        AppRoutes.Result(gameId = uiState.lastSavedGameId).buildRoute()
-                    ) {
-                        // Clear the game screen from the back stack
-                        popUpTo(AppRoutes.Game().route) { inclusive = true }
+                    uiState.finalizedGameId?.let { gameId ->
+                        // The 'let' block only executes if finalizedGameId is NOT null.
+                        // 'gameId' inside this block is a non-nullable Long.
+                        navController.navigate(
+                            AppRoutes.Result(gameId = gameId).buildRoute()
+                        ) {
+                            // Clear the game screen from the back stack to prevent the user
+                            // from navigating back to a finished game.
+                            popUpTo(AppRoutes.Game().route) { inclusive = true }
+                        }
                     }
                 }
             }
@@ -107,8 +118,8 @@ fun AppNavigation(modifier: Modifier) {
                 },
                 onRestart = {
                     // Navigate back to the start screen
-                    navController.navigate(AppRoutes.Start.route) {
-                        popUpTo(AppRoutes.Start.route) { inclusive = true }
+                    navController.navigate(AppRoutes.Home.route) {
+                        popUpTo(AppRoutes.Home.route) { inclusive = true }
                     }
                 }
             )

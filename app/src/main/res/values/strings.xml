@@ -9,6 +9,17 @@
     <string name="view_history">View History</string>
     <string name="minutes_input_label_full">minutes</string>
 
+    <!-- Login Screen Strings -->
+    <string name="login_welcome_title">Welcome to Abacus Activity</string>
+    <string name="login_welcome_subtitle">Please sign in to save your progress and compete with others.</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+
+    <!-- Login Error Messages -->
+    <string name="error_sign_in_failed">Sign-in failed. Please try again.</string>
+    <string name="error_token_parse_failed">Sign-in failed: Could not process user information.</string>
+    <string name="error_unexpected_credential">Sign-in failed: An unexpected error occurred.</string>
+
+
     <!-- GameActiveScreen -->
     <string name="score_label">Score: %1$d</string>
     <string name="time_label">Time: %1$02d:%2$02d</string>
@@ -33,7 +44,15 @@
     <string name="correct">Correct</string>
     <string name="incorrect">Incorrect</string>
     <string name="accuracy">Accuracy</string>
+    <string name="time_played">Time</string>
     <!--PauseScreen -->
     <string name="game_paused">Game Paused</string>
     <string name="resume_button">Resume</string>
+    <!-- NEW: Terminate Game Feature Strings -->
+    <string name="terminate_game_button">Terminate Game</string>
+    <string name="terminate_dialog_title">End Game?</string>
+    <string name="terminate_dialog_message">Are you sure you want to end this game? Your progress will be saved.</string>
+    <string name="terminate_dialog_confirm_button">End Game</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="default_web_client_id" translatable="false">1678613550-e7mcka9c802lmpp6uu8gu2k5545dl0lk.apps.googleusercontent.com</string>
 </resources>
