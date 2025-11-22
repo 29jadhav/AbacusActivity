@@ -20,6 +20,7 @@ sealed class AppRoutes(
         }
 
     data object Login : AppRoutes("login_screen")
+
     // Route for Start Screen (no arguments)
     data object Home : AppRoutes("start")
 
@@ -34,11 +35,13 @@ sealed class AppRoutes(
     }
 
     // Route for Game Screen (with a duration argument)
-    data class Game(val duration: Int = 0) : AppRoutes(
+    data class Game(val duration: Int = 0, val lessonId: Int = 1) : AppRoutes(
         baseRoute = "game",
-        navArguments = listOf(navArgument("durationInSeconds") { type = NavType.IntType })
+        navArguments = listOf(
+            navArgument("durationInSeconds") { type = NavType.IntType },
+            navArgument("lessonId") { type = NavType.IntType })
     ) {
-        fun buildRoute() = "$baseRoute/$duration"
+        fun buildRoute() = "$baseRoute/$duration/$lessonId"
 
     }
 

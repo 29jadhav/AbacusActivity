@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vivek.abacusactivity.data.entity.GameStatus
 import com.vivek.abacusactivity.data.entity.ProblemEntity
+import com.vivek.abacusactivity.data.repository.ProblemRepositoryProvider
 import com.vivek.abacusactivity.domain.repository.AuthRepository
 import com.vivek.abacusactivity.domain.repository.ProblemRepository
 import com.vivek.abacusactivity.domain.usecase.FinalizeGameUseCase
@@ -40,6 +41,11 @@ class GameViewModel @Inject constructor(
     private var timerJob: Job? = null
 
     init {
+        val lessonId = savedStateHandle.get<Int>("lessonId") ?: 1
+        Log.d("TAG1","lessonId=====$lessonId")
+        if (problemRepository is ProblemRepositoryProvider) {
+            problemRepository.setLesson(lessonId)
+        }
         startGame()
     }
 
