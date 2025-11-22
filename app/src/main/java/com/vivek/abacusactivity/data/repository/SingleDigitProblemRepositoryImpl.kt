@@ -1,6 +1,7 @@
-package com.vivek.abacusactivity.domain.repository
+package com.vivek.abacusactivity.data.repository
 
 import com.vivek.abacusactivity.domain.model.Problem
+import com.vivek.abacusactivity.domain.repository.ProblemRepository
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -8,7 +9,7 @@ import kotlin.random.Random
  * Repository responsible for generating calculation problems.
  * This abstracts the data generation logic from the ViewModel.
  */
-class ProblemRepositoryImpl  @Inject constructor() : ProblemRepository {
+class SingleDigitProblemRepositoryImpl  @Inject constructor() : ProblemRepository {
 
     fun needsSmallFriend(prev: Int, change: Int): Boolean {
         val newValue = prev + change

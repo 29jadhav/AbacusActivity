@@ -48,8 +48,10 @@ fun AppNavigation(modifier: Modifier, isUserLoggedIn: Boolean) {
             // Just call the main screen, which manages its own state via the ViewModel
             StartScreen(
                 modifier = modifier,
-                onStart = { duration ->
-                    navController.navigate(AppRoutes.Game(duration = duration).buildRoute())
+                onStart = { duration, lesson ->
+                    navController.navigate(
+                        AppRoutes.Game(duration = duration, lessonId = lesson).buildRoute()
+                    )
                 },
                 onNavigateToHistory = { navController.navigate(AppRoutes.History.route) }
             )
@@ -57,7 +59,9 @@ fun AppNavigation(modifier: Modifier, isUserLoggedIn: Boolean) {
 
         composable(
             route = AppRoutes.Game().route,
-            arguments = listOf(navArgument("durationInSeconds") { type = NavType.IntType })
+            arguments = listOf(
+                navArgument("durationInSeconds") { type = NavType.IntType },
+                navArgument("lessonId") { type = NavType.IntType })
         ) {
             val gameViewModel: GameViewModel = hiltViewModel()
             val uiState by gameViewModel.uiState.collectAsState()
